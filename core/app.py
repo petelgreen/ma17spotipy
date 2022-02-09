@@ -1,43 +1,50 @@
 from core.os_methods import OSMethods
+from core.models.Models import Consts
+from core.helpers.user import User, UserType
 
 
 class App:
-    def __init__(self, path):
+    def __init__(self, user: User):
+        self.user = user
         o = OSMethods()
-        o.load_files(path)
         self.artists = o.artists
         self.albums = o.albums
+        if self.user.type is UserType.FREE: self.results_num = Consts.FREE_RESULTS_NUM
+        else: self.results_num = Consts.PREMIUM_RESULTS_NUM
+        if self.user.type is UserType.FREE: self.top_results_num = Consts.FREE_RESULTS_NUM
+        else: self.top_results_num = Consts.PREMIUM_RESULTS_NUM
 
     def all_artists(self):
-        return [artist.artist_name for artist in self.artists.values()]
+        return [artist.artist_name for artist in self.artists.values()][:self.results_num]
 
     def artist_albums(self, artist_id):
         return [album.album_name for album in self.albums.values() if
-                album.album_id in self.artists.get(artist_id).albums_ids]
+                album.album_id in self.artists.get(artist_id).albums_ids][:self.results_num]
 
     def all_songs(self):
         songs = []
         [[songs.append(song) for song in album.songs.values()] for album in [album for album in self.albums.values()]]
-        return songs
+        return songs[:self.results_num]
 
     def top_ten_songs(self):
-        return sorted(self.all_songs(), key=lambda x: x.popularity, reverse=True)[:10]
+        return sorted(self.all_songs(), key=lambda x: x.popularity, reverse=True)[:self.top_results_num]
 
     def all_artist_songs(self, artist_id):
         songs = []
         [[songs.append(song) for song in album.songs.values()] for album in [album for album in self.albums.values() if
-                album.album_id in self.artists.get(artist_id).albums_ids]]
+                                                                             album.album_id in self.artists.get(
+                                                                                 artist_id).albums_ids]]
         return songs
 
     def artist_top_ten_songs(self, artist_id):
-        return sorted(self.all_artist_songs(artist_id), key=lambda x: x.popularity, reverse=True)[:10]
+        return sorted(self.all_artist_songs(artist_id), key=lambda x: x.popularity, reverse=True)[:self.top_results_num]
 
     def album_songs(self, album_id):
-        return self.albums.get(album_id).songs
+        return {k:v for (k, v) in [x for x in self.albums.get(album_id).songs.items()][:self.results_num]}
 
 
-
-a = App(r"C:\Users\User\Desktop\petel\songs")
+user = User("preen", UserType.FREE)
+a = App(user)
 artist_id = "2l6M7GaS9x3rZOX6nDX3CM"
 album_id = "5DvWThv9KXSsyZPDyozM49"
-print(a.album_songs(album_id))
+print(a.all_artists())

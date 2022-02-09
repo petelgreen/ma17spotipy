@@ -1,17 +1,18 @@
 import os, json
-from core.models.Models import Album, Artist, Song
+from core.models.Models import Album, Artist, Song, Consts
 
 
 class OSMethods:
     def __init__(self):
         self.artists = {}
         self.albums = {}
+        self.load_files()
 
-    def load_files(self, path):
-        [self.load_file(pos_json, path) for pos_json in os.listdir(path) if pos_json.endswith('.json')]
+    def load_files(self):
+        [self.load_file(pos_json) for pos_json in os.listdir(Consts.SONGS_PATH) if pos_json.endswith('.json')]
 
-    def load_file(self, file_name, path):
-        file = open(path + "/" + file_name)
+    def load_file(self, file_name):
+        file = open(Consts.SONGS_PATH + "/" + file_name)
         data = json.load(file).get('track')
         artists = data.get('artists')
         album = data.get('album')
@@ -24,6 +25,3 @@ class OSMethods:
                 self.artists[artist.get('id')] = Artist(artist.get('id'), artist.get('name'))
             self.artists[artist.get('id')].add_album(album_obj.album_id)
 
-
-d = OSMethods()
-d.load_files(r"C:\Users\User\Desktop\petel\songs")

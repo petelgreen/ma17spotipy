@@ -34,3 +34,17 @@ class Artist:
     def add_album(self, album_id):
         self.albums_ids.append(album_id)
 
+
+class UserType:
+    FREE = "free"
+    PREMIUM = "premium"
+
+
+class Consts:
+    FREE_USER_SONGS_LIMIT = 20
+    FREE_USER_PLAYLISTS_LIMIT = 5
+    SONGS_PATH = r"C:\Users\User\Desktop\petel\songs"
+    PREMIUM_RESULTS_NUM = 10000000
+    FREE_RESULTS_NUM = 5
+    FREE_USER_TOP_RESULTS = 5
+    PREMIUM_USER_TOP_RESULTS = 10

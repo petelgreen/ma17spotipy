@@ -1,0 +1,36 @@
+class Song:
+    def __init__(self, song_id, song_name, popularity):
+        self.song_id = song_id
+        self.song_name = song_name
+        self.popularity = popularity
+
+    def __repr__(self):
+        return f" Song: {self.song_name} - {self.popularity} "
+
+
+class Album:
+    def __init__(self, album_id, album_name, artists):
+        self.album_id = album_id
+        self.album_name = album_name
+        self.artists = artists
+        self.songs = {}
+
+    def add_song(self, song: Song):
+        self.songs[song.song_id] = song
+
+    def __repr__(self):
+        return f"{self.album_id}, {self.album_name}, {self.artists}, {self.songs}"
+
+
+class Artist:
+    def __init__(self, artist_id, artist_name):
+        self.artist_id = artist_id
+        self.artist_name = artist_name
+        self.albums_ids = []
+
+    def __repr__(self):
+        return f" Artist :{self.artist_id}, {self.artist_name}, {self.albums_ids}"
+
+    def add_album(self, album_id):
+        self.albums_ids.append(album_id)
+

@@ -1,9 +1,6 @@
 from core.os_methods import OSMethods
 from core.models.Models import Consts
 from core.helpers.user import User, UserType
-from flask import Flask
-from flask import Blueprint
-import os
 
 
 class App:
@@ -12,6 +9,8 @@ class App:
         o = OSMethods()
         self.artists = o.artists
         self.albums = o.albums
+        if self.is_user_artist():
+            self.user.type = UserType.PREMIUM
         if self.user.type == UserType.FREE:
             self.results_num = Consts.FREE_RESULTS_NUM
         else:
@@ -48,3 +47,9 @@ class App:
 
     def album_songs(self, album_id):
         return {k: v for (k, v) in [x for x in self.albums.get(album_id).songs.items()][:self.results_num]}
+
+    def is_user_artist(self):
+        o = OSMethods()
+        artists = o.artists
+        artists_names = [artist.artist_name for artist in artists.values()]
+        return self.user.username in artists_names

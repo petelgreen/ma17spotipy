@@ -49,4 +49,4 @@ class Consts:
     FREE_USER_TOP_RESULTS = 5
     PREMIUM_USER_TOP_RESULTS = 10
     USERS_PATH = r"C:\Users\User\Desktop\petel\ma17spotipy\users"
-
+    LOGS_PATTH = r"C:\Users\User\Desktop\petel\ma17spotipy\logs.log"

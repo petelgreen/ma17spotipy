@@ -1,5 +1,5 @@
 from core.os_methods import OSMethods
-from core.models.Models import Consts
+from core.models.Models import Consts, UserRank
 from core.helpers.user import User, UserType
 
 
@@ -9,6 +9,7 @@ class App:
         o = OSMethods()
         self.artists = o.artists
         self.albums = o.albums
+        self.audio_features = o.audio_features
         if self.is_user_artist():
             self.user.type = UserType.PREMIUM
         if self.user.type == UserType.FREE:
@@ -53,3 +54,25 @@ class App:
         artists = o.artists
         artists_names = [artist.artist_name for artist in artists.values()]
         return self.user.username in artists_names
+
+    # give user his audio_features_rank by his playlists
+    def audio_features_rank(self):
+        playlists = self.user.get_my_playlists()
+        if playlists is None: return
+        all_fav_songs = []
+        [all_fav_songs.append(songs) for songs in playlists.values()]
+        rank_dict = {"danceability": 0, "energy": 0, "acousticness": 0, "valence": 0}
+        for song_id in all_fav_songs:
+            for feature, value in rank_dict.items():
+                rank_dict[feature] += self.get_song_feature_rank(song_id, feature)
+        songs_count = len(all_fav_songs)
+        for feature, value in rank_dict.items():
+            rank_dict[feature] = value / songs_count
+        self.user.audio_features.energy = rank_dict.get("energy")
+        self.user.audio_features.valence = rank_dict.get("valence")
+        self.user.audio_features.danceability = rank_dict.get("danceability")
+        self.user.audio_features.acousticness = rank_dict.get("acousticness")
+
+    def get_song_feature_rank(self, song_id, feature):
+        return self.audio_features.get(song_id).rank_dict.get(feature)
+

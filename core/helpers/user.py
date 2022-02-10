@@ -1,6 +1,6 @@
 from core.custom_exeptions.exeptions import ExistingPlaylistName, ToManySongsInPlaylistForFreeEdition, \
     ToManyPlaylistsForFreeEdition
-from core.models.Models import UserType, Consts
+from core.models.Models import UserType, Consts, UserRank
 import json
 import logging
 
@@ -10,6 +10,7 @@ class User:
         self.username = username
         self.password = password
         self.type = type
+        self.audio_features = UserRank()
 
     def create_playlist(self, playlist_name, songs_list):
         user_data = self.read_playlists()

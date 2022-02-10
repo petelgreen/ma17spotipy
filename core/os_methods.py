@@ -1,5 +1,5 @@
 import os, json
-from core.models.Models import Album, Artist, Song, Consts
+from core.models.Models import Album, Artist, Song, Consts, SongRank
 from core.custom_exeptions.exeptions import UserNotExist, NotCorrectPassword
 import logging
 from core.helpers.user import User
@@ -9,13 +9,14 @@ class OSMethods:
     def __init__(self):
         self.artists = {}
         self.albums = {}
-        self.load_files()
+        self.audio_features = {}
+        self.load_track_files()
 
-    def load_files(self):
-        [self.load_file(pos_json) for pos_json in os.listdir(Consts.SONGS_PATH) if pos_json.endswith('.json')]
+    def load_track_files(self):
+        [self.load_track_file(pos_json) for pos_json in os.listdir(Consts.SONGS_PATH) if pos_json.endswith('.json')]
         logging.info("loaded files succesfully")
 
-    def load_file(self, file_name):
+    def load_track_file(self, file_name):
         file = open(Consts.SONGS_PATH + "/" + file_name)
         data = json.load(file).get('track')
         artists = data.get('artists')
@@ -28,6 +29,16 @@ class OSMethods:
             if artist.get('id') not in self.artists:
                 self.artists[artist.get('id')] = Artist(artist.get('id'), artist.get('name'))
             self.artists[artist.get('id')].add_album(album_obj.album_id)
+
+    def load_audio_features_files(self):
+        [self.load_track_file(pos_json) for pos_json in os.listdir(Consts.AUDIO_FEATURES_PATH) if
+         pos_json.endswith('.json')]
+
+    def load_audio_features_file(self, file_name):
+        file = open(Consts.AUDIO_FEATURES_PATH + "/" + file_name)
+        d = json.load(file)
+        rank = SongRank(d)
+        self.audio_features[rank.song_id] = rank
 
 
 def is_user_valid(_user):

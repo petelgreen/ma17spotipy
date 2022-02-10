@@ -35,6 +35,26 @@ class Artist:
         self.albums_ids.append(album_id)
 
 
+class SongRank:
+    def __init__(self, dict_rank):
+        self.dict_rank = dict_rank
+
+    def __repr__(self):
+        return f"{self.song_id}"
+
+
+class UserRank:
+    def __init__(self, danceability=0.5, energy=0.5, acousticness=0.5, instrumentalness='1.8e-06', valence=0.5):
+        self.valence = valence
+        self.danceability = danceability
+        self.energy = energy
+        self.acousticness = acousticness
+        self.instrumentalness = instrumentalness
+
+    def __repr__(self):
+        return f"{self.song_id}"
+
+
 class UserType:
     FREE = "free"
     PREMIUM = "premium"
@@ -50,3 +70,4 @@ class Consts:
     PREMIUM_USER_TOP_RESULTS = 10
     USERS_PATH = r"C:\Users\User\Desktop\petel\ma17spotipy\users"
     LOGS_PATTH = r"C:\Users\User\Desktop\petel\ma17spotipy\logs.log"
+    AUDIO_FEATURES_PATH = r"C:\Users\User\Desktop\petel\audio_features"

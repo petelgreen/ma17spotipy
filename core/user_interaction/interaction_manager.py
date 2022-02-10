@@ -80,6 +80,14 @@ else:
         print(logic.album_songs(_id))
 
 
+    def get_my_playlists_wrapper():
+        print(_user.get_my_playlists())
+
+
+    def create_personal_custom_playlist_wrapper():
+        print(logic.create_personal_custom_playlist())
+
+
     menu = ConsoleMenu(":)")
     menu.append_item(FunctionItem("get the artist", all_artist_wrapper))
     menu.append_item(FunctionItem("get artist albums by id", artist_albums_wrapper, ["66jtNcSqBSNontUk1Apdam"]))
@@ -89,6 +97,8 @@ else:
     menu.append_item(FunctionItem("create playlist", _user.create_playlist, ["my cool playlist", [
         "\u05ea\u05d2\u05d9\u05d3\u05d5 \u05dc\u05d9 \u05d0\u05d7\u05e8\u05ea"]]))
     menu.append_item(FunctionItem("get ur playlists", _user.get_my_playlists))
+    menu.append_item(
+        FunctionItem("get a personal custom playlist we made for you", create_personal_custom_playlist_wrapper))
 
     menu.start()
     menu.show()

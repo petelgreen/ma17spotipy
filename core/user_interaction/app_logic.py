@@ -60,7 +60,10 @@ class App:
         playlists = self.user.get_my_playlists()
         if playlists is None: return
         all_fav_songs = []
-        [all_fav_songs.append(songs) for songs in playlists.values()]
+        for songs in playlists.values():
+            for song in songs:
+                all_fav_songs.append(song)
+        print(all_fav_songs)
         rank_dict = {"danceability": 0, "energy": 0, "acousticness": 0, "valence": 0}
         for song_id in all_fav_songs:
             for feature, value in rank_dict.items():
@@ -72,7 +75,28 @@ class App:
         self.user.audio_features.valence = rank_dict.get("valence")
         self.user.audio_features.danceability = rank_dict.get("danceability")
         self.user.audio_features.acousticness = rank_dict.get("acousticness")
+        return rank_dict
 
     def get_song_feature_rank(self, song_id, feature):
-        return self.audio_features.get(song_id).rank_dict.get(feature)
+        return int(self.audio_features.get(song_id).rank_dict.get(feature))
+
+    def create_personal_custom_playlist(self):
+        playlist = []
+        rank_dict = self.audio_features_rank()
+        for feature, value in rank_dict.items():
+            feature_dict = self.get_songs_feature_rank(feature)
+            res_song, res_val = min(feature_dict.items(), key=lambda x: abs(value - x[1]))
+            playlist.append(res_song)
+            feature_dict.pop(res_song)
+            res_song2, res_val2 = min(feature_dict.items(), key=lambda x: abs(value - x[1]))
+            playlist.append(res_song2)
+
+        self.user.create_playlist("personal custom made playlist", playlist)
+        return playlist
+
+    def get_songs_feature_rank(self, feature):
+        res_dict = {}
+        for song_id, value in self.audio_features.items():
+            res_dict[song_id] = value.get(feature)
+        return res_dict
 

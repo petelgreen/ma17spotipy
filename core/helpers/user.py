@@ -16,7 +16,7 @@ class User:
         user_data = self.read_playlists()
         logging.info(f" {self.username} data: {user_data}")
         if user_data.get("playlists") is None:
-            user_data["playlists"] = {}
+            user_data["playlists"] = []
             logging.info(f"{self.username} creating his first playlist")
         user_playlists = user_data.get("playlists")
         if self.type is UserType.FREE:
@@ -52,7 +52,9 @@ class User:
         file = open(path, "r")
         playlists = json.load(file).get("playlists")
         file.close()
-        print(playlists)
+        return playlists
 
     def __repr__(self):
         return f"{self.username} - {self.password} - {self.type}"
+
+

@@ -40,7 +40,7 @@ class SongRank:
         self.dict_rank = dict_rank
 
     def __repr__(self):
-        return f"{self.song_id}"
+        return f"{self.dict_rank}"
 
 
 class UserRank:

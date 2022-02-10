@@ -11,6 +11,7 @@ class OSMethods:
         self.albums = {}
         self.audio_features = {}
         self.load_track_files()
+        self.load_audio_features_files()
 
     def load_track_files(self):
         [self.load_track_file(pos_json) for pos_json in os.listdir(Consts.SONGS_PATH) if pos_json.endswith('.json')]
@@ -31,14 +32,14 @@ class OSMethods:
             self.artists[artist.get('id')].add_album(album_obj.album_id)
 
     def load_audio_features_files(self):
-        [self.load_track_file(pos_json) for pos_json in os.listdir(Consts.AUDIO_FEATURES_PATH) if
+        [self.load_audio_features_file(pos_json) for pos_json in os.listdir(Consts.AUDIO_FEATURES_PATH) if
          pos_json.endswith('.json')]
 
     def load_audio_features_file(self, file_name):
         file = open(Consts.AUDIO_FEATURES_PATH + "/" + file_name)
         d = json.load(file)
         rank = SongRank(d)
-        self.audio_features[rank.song_id] = rank
+        self.audio_features[rank.dict_rank.get("id")] = rank
 
 
 def is_user_valid(_user):

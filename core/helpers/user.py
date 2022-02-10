@@ -6,8 +6,9 @@ import json
 
 
 class User:
-    def __init__(self, username, type):
+    def __init__(self, username, type, password):
         self.username = username
+        self.password = password
         self.type = type
         if self.is_user_artist(): self.type = UserType.PREMIUM
 
@@ -25,12 +26,12 @@ class User:
         self.save_playlist(user_playlists)
 
     def read_playlists(self):
-        path = r"C:\Users\User\Desktop\petel\ma17spotipy\users/" + self.username
+        path = Consts.USERS_PATH + self.username
         file = open(path, "r")
         return json.load(file)
 
     def save_playlist(self, playlist):
-        path = r"C:\Users\User\Desktop\petel\ma17spotipy\users/" + self.username
+        path = Consts.USERS_PATH + self.username
         file = open(path, "w")
         file.write(json.dumps(playlist))
         file.close()
@@ -40,6 +41,7 @@ class User:
         artists_names = [artist.artist_name for artist in artists.values()]
         return self.username in artists_names
 
-u = User("Omer Adam", UserType.FREE)
-print(u.type)
+    def __repr__(self):
+        return f"{self.username} - {self.password} - {self.type}"
+
 

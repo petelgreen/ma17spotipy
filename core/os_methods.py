@@ -1,5 +1,6 @@
 import os, json
 from core.models.Models import Album, Artist, Song, Consts
+from core.custom_exeptions.exeptions import UserNotExist, NotCorrectPassword
 
 
 class OSMethods:
@@ -25,3 +26,13 @@ class OSMethods:
                 self.artists[artist.get('id')] = Artist(artist.get('id'), artist.get('name'))
             self.artists[artist.get('id')].add_album(album_obj.album_id)
 
+
+def is_user_valid(_user):
+    file = open(Consts.USERS_PATH + "\\" + _user.username + ".json")
+    user_data = json.load(file)
+    file.close()
+    if user_data is None:
+        raise UserNotExist
+    if str(_user.password) == str(user_data.get("password")):
+        return True
+    raise NotCorrectPassword

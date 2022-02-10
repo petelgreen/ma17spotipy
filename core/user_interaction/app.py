@@ -1,18 +1,26 @@
 from core.os_methods import OSMethods
 from core.models.Models import Consts
 from core.helpers.user import User, UserType
+from flask import Flask
+from flask import Blueprint
+import os
 
 
 class App:
-    def __init__(self, user: User):
-        self.user = user
+    def __init__(self, _user: User):
+        self.user = _user
+        print(self.user)
         o = OSMethods()
         self.artists = o.artists
         self.albums = o.albums
-        if self.user.type is UserType.FREE: self.results_num = Consts.FREE_RESULTS_NUM
-        else: self.results_num = Consts.PREMIUM_RESULTS_NUM
-        if self.user.type is UserType.FREE: self.top_results_num = Consts.FREE_RESULTS_NUM
-        else: self.top_results_num = Consts.PREMIUM_RESULTS_NUM
+        if self.user.type == UserType.FREE:
+            self.results_num = Consts.FREE_RESULTS_NUM
+        else:
+            self.results_num = Consts.PREMIUM_RESULTS_NUM
+        if self.user.type == UserType.FREE:
+            self.top_results_num = Consts.FREE_RESULTS_NUM
+        else:
+            self.top_results_num = Consts.PREMIUM_USER_TOP_RESULTS
 
     def all_artists(self):
         return [artist.artist_name for artist in self.artists.values()][:self.results_num]
@@ -40,11 +48,4 @@ class App:
         return sorted(self.all_artist_songs(artist_id), key=lambda x: x.popularity, reverse=True)[:self.top_results_num]
 
     def album_songs(self, album_id):
-        return {k:v for (k, v) in [x for x in self.albums.get(album_id).songs.items()][:self.results_num]}
-
-
-user = User("preen", UserType.FREE)
-a = App(user)
-artist_id = "2l6M7GaS9x3rZOX6nDX3CM"
-album_id = "5DvWThv9KXSsyZPDyozM49"
-print(a.all_artists())
+        return {k: v for (k, v) in [x for x in self.albums.get(album_id).songs.items()][:self.results_num]}

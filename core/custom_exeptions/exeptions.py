@@ -11,3 +11,14 @@ class ToManyPlaylistsForFreeEdition(Exception):
 class ToManySongsInPlaylistForFreeEdition(Exception):
     def __init__(self):
         return "only premium helpers can add more than 20 songs into playlist"
+
+
+class UserNotExist(Exception):
+    pass
+
+
+class NotCorrectPassword(Exception):
+    pass
+
+class ProblemLoggingIn(Exception):
+    pass

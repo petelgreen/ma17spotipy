@@ -9,7 +9,6 @@ import os
 class App:
     def __init__(self, _user: User):
         self.user = _user
-        print(self.user)
         o = OSMethods()
         self.artists = o.artists
         self.albums = o.albums
